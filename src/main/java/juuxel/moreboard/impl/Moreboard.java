@@ -3,10 +3,6 @@ package juuxel.moreboard.impl;
 import juuxel.moreboard.api.MoreboardApi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.stat.StatType;
 import net.minecraft.tag.ServerTagManagerHolder;
@@ -28,10 +24,10 @@ public final class Moreboard implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        MoreboardApi.addTagsForRegistry(Registry.BLOCK, Moreboard::getBlockTags);
-        MoreboardApi.addTagsForRegistry(Registry.ITEM, Moreboard::getItemTags);
-        MoreboardApi.addTagsForRegistry(Registry.ENTITY_TYPE, Moreboard::getEntityTags);
-        MoreboardApi.addTagsForRegistry(Registry.FLUID, Moreboard::getFluidTags);
+        MoreboardApi.addTagsForRegistry(Registry.BLOCK, () -> ServerTagManagerHolder.getTagManager().getBlocks());
+        MoreboardApi.addTagsForRegistry(Registry.ITEM, () -> ServerTagManagerHolder.getTagManager().getItems());
+        MoreboardApi.addTagsForRegistry(Registry.ENTITY_TYPE, () -> ServerTagManagerHolder.getTagManager().getEntityTypes());
+        MoreboardApi.addTagsForRegistry(Registry.FLUID, () -> ServerTagManagerHolder.getTagManager().getFluids());
 
         Util.visit(Registry.STAT_TYPE, (statType, id) -> {
             addStat(statType, tagGroupRegistry.get(statType.getRegistry()));
@@ -49,22 +45,6 @@ public final class Moreboard implements ModInitializer {
 
     public static Identifier id(String path) {
         return new Identifier("moreboard", path);
-    }
-
-    private static TagGroup<Block> getBlockTags() {
-        return ServerTagManagerHolder.getTagManager().getBlocks();
-    }
-
-    private static TagGroup<Item> getItemTags() {
-        return ServerTagManagerHolder.getTagManager().getItems();
-    }
-
-    private static TagGroup<EntityType<?>> getEntityTags() {
-        return ServerTagManagerHolder.getTagManager().getEntityTypes();
-    }
-
-    private static TagGroup<Fluid> getFluidTags() {
-        return ServerTagManagerHolder.getTagManager().getFluids();
     }
 
     private static final class TagGroupEntry<T> {
