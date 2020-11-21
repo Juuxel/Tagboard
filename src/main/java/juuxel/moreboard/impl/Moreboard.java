@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.stat.StatType;
@@ -30,6 +31,7 @@ public final class Moreboard implements ModInitializer {
         MoreboardApi.addTagsForRegistry(Registry.BLOCK, Moreboard::getBlockTags);
         MoreboardApi.addTagsForRegistry(Registry.ITEM, Moreboard::getItemTags);
         MoreboardApi.addTagsForRegistry(Registry.ENTITY_TYPE, Moreboard::getEntityTags);
+        MoreboardApi.addTagsForRegistry(Registry.FLUID, Moreboard::getFluidTags);
 
         Util.visit(Registry.STAT_TYPE, (statType, id) -> {
             addStat(statType, tagGroupRegistry.get(statType.getRegistry()));
@@ -59,6 +61,10 @@ public final class Moreboard implements ModInitializer {
 
     private static TagGroup<EntityType<?>> getEntityTags() {
         return ServerTagManagerHolder.getTagManager().getEntityTypes();
+    }
+
+    private static TagGroup<Fluid> getFluidTags() {
+        return ServerTagManagerHolder.getTagManager().getFluids();
     }
 
     private static final class TagGroupEntry<T> {
