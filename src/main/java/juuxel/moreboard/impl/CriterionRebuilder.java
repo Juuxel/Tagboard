@@ -1,7 +1,6 @@
 package juuxel.moreboard.impl;
 
 import com.google.common.collect.ImmutableSet;
-import juuxel.moreboard.api.TagStatRegistry;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
@@ -26,6 +25,6 @@ final class CriterionRebuilder implements SimpleSynchronousResourceReloadListene
 
     @Override
     public void apply(ResourceManager manager) {
-        TagStatRegistry.rebuild();
+        TagObjectiveManager.rebuild();
     }
 }

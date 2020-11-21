@@ -1,4 +1,4 @@
-package juuxel.moreboard.api;
+package juuxel.moreboard.impl;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
@@ -11,7 +11,6 @@ import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,27 +19,27 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class TagStatRegistry {
-    private static final Map<StatType<?>, Entry<?>> registry = new HashMap<>();
-    private static final Map<StatType<?>, SetMultimap<Identifier, ScoreboardCriterion>> cache = new HashMap<>();
+public final class TagObjectiveManager {
+    private static final Map<StatType<?>, StatTypeEntry<?>> statTypes = new HashMap<>();
 
-    @ApiStatus.Internal
+    // StatType<T> -> Identifier in Registry<T> -> Set<ScoreboardCriterion>
+    private static final Map<StatType<?>, SetMultimap<Identifier, ScoreboardCriterion>> criteria = new HashMap<>();
+
     public static <T> Set<ScoreboardCriterion> getTagCriteria(Stat<T> stat) {
-        if (!cache.containsKey(stat.getType())) {
+        if (!criteria.containsKey(stat.getType())) {
             return Collections.emptySet();
         }
 
         Identifier valueId = stat.getType().getRegistry().getId(stat.getValue());
-        return cache.get(stat.getType()).get(valueId);
+        return criteria.get(stat.getType()).get(valueId);
     }
 
     @SuppressWarnings("unchecked")
-    @ApiStatus.Internal
     public static void rebuild() {
-        cache.clear();
+        criteria.clear();
 
         for (StatType<?> statType : Registry.STAT_TYPE) {
-            Entry<?> entry = registry.get(statType);
+            StatTypeEntry<?> entry = statTypes.get(statType);
             if (entry == null) continue;
 
             Identifier statId = Registry.STAT_TYPE.getId(statType);
@@ -58,37 +57,31 @@ public class TagStatRegistry {
                 }
             }
 
-            cache.put(statType, ImmutableSetMultimap.copyOf(criterionMap));
+            criteria.put(statType, ImmutableSetMultimap.copyOf(criterionMap));
         }
     }
 
     private static ScoreboardCriterion getCriterion(Identifier statId, Identifier tagId) {
-        return getCriterion(getName(statId, tagId));
-    }
+        String name = idToString(statId) + ":#" + idToString(tagId);
 
-    private static ScoreboardCriterion getCriterion(String name) {
         return ScoreboardCriterion.OBJECTIVES.containsKey(name)
             ? ScoreboardCriterion.OBJECTIVES.get(name)
             : new ScoreboardCriterion(name);
-    }
-
-    private static String getName(Identifier statId, Identifier tagId) {
-        return idToString(statId) + ":#" + idToString(tagId);
     }
 
     private static String idToString(Identifier id) {
         return id.toString().replace(':', '.');
     }
 
-    public static <T> void register(StatType<T> statType, Registry<T> registry, Supplier<TagGroup<T>> groupSupplier) {
-        TagStatRegistry.registry.put(statType, new Entry<>(registry::getId, groupSupplier));
+    public static <T> void addStat(StatType<T> statType, Registry<T> registry, Supplier<TagGroup<T>> groupSupplier) {
+        TagObjectiveManager.statTypes.put(statType, new StatTypeEntry<>(registry::getId, groupSupplier));
     }
 
-    private static final class Entry<T> {
+    private static final class StatTypeEntry<T> {
         final Function<T, Identifier> idGetter;
         final Supplier<TagGroup<T>> groupSupplier;
 
-        Entry(Function<T, Identifier> idGetter, Supplier<TagGroup<T>> groupSupplier) {
+        StatTypeEntry(Function<T, Identifier> idGetter, Supplier<TagGroup<T>> groupSupplier) {
             this.idGetter = idGetter;
             this.groupSupplier = groupSupplier;
         }

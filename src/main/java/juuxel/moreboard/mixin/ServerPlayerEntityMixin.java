@@ -1,7 +1,7 @@
 package juuxel.moreboard.mixin;
 
 import com.mojang.authlib.GameProfile;
-import juuxel.moreboard.api.TagStatRegistry;
+import juuxel.moreboard.impl.TagObjectiveManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,7 +21,7 @@ abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     @Inject(method = "increaseStat", at = @At("RETURN"))
     private void onIncreaseStat(Stat<?> stat, int amount, CallbackInfo info) {
-        for (ScoreboardCriterion criterion : TagStatRegistry.getTagCriteria(stat)) {
+        for (ScoreboardCriterion criterion : TagObjectiveManager.getTagCriteria(stat)) {
             getScoreboard().forEachScore(criterion, this.getEntityName(), score -> score.incrementScore(amount));
         }
     }
