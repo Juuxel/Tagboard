@@ -19,6 +19,9 @@
 
   "environment": "*",
   "entrypoints": {
+    "main": [
+      "juuxel.moreboard.impl.Moreboard"
+    ]
   },
   "mixins": [
     "mixins.moreboard.json"
