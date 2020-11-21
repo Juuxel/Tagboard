@@ -19,6 +19,10 @@ public final class Tagboard implements ModInitializer {
     private static final Map<Registry<?>, TagGroupEntry<?>> tagGroupRegistry = new HashMap<>();
 
     public static <T, G extends TagGroup<T>> void addTagsForRegistry(Registry<? extends T> registry, Supplier<G> groupSupplier) {
+        if (tagGroupRegistry.containsKey(registry)) {
+            throw new IllegalStateException("Already registered: " + registry);
+        }
+
         tagGroupRegistry.put(registry, new TagGroupEntry<>(registry, groupSupplier));
     }
 
