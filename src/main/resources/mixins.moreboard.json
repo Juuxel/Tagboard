@@ -4,7 +4,7 @@
   "package": "juuxel.moreboard.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ServerPlayerEntityMixin"
+    "ScoreboardMixin"
   ],
   "client": [
   ],
