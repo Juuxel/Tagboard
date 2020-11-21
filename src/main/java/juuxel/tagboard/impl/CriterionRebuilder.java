@@ -1,4 +1,4 @@
-package juuxel.moreboard.impl;
+package juuxel.tagboard.impl;
 
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 
 final class CriterionRebuilder implements SimpleSynchronousResourceReloadListener {
-    private static final Identifier ID = Moreboard.id("criterion_rebuilder");
+    private static final Identifier ID = Tagboard.id("criterion_rebuilder");
     private static final Set<Identifier> DEPENDENCIES = ImmutableSet.of(ResourceReloadListenerKeys.TAGS);
 
     @Override

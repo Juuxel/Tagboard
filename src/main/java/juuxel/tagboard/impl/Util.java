@@ -1,4 +1,4 @@
-package juuxel.moreboard.impl;
+package juuxel.tagboard.impl;
 
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.util.Identifier;

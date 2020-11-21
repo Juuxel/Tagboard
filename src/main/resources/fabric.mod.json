@@ -1,30 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "moreboard",
+  "id": "tagboard",
   "version": "${version}",
 
-  "name": "Moreboard",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Tagboard",
+  "description": "Use tags in scoreboard objectives!",
   "authors": [
     "Juuz"
   ],
   "contact": {
-    "homepage": "https://github.com/Juuxel/Moreboard",
-    "sources": "https://github.com/Juuxel/Moreboard",
-    "issues": "https://github.com/Juuxel/Moreboard/issues"
+    "homepage": "https://github.com/Juuxel/Tagboard",
+    "sources": "https://github.com/Juuxel/Tagboard",
+    "issues": "https://github.com/Juuxel/Tagboard/issues"
   },
 
   "license": "LGPL-3.0-only",
-  "icon": "assets/moreboard/icon.png",
+  "icon": "assets/tagboard/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "juuxel.moreboard.impl.Moreboard"
+      "juuxel.tagboard.impl.Tagboard"
     ]
   },
   "mixins": [
-    "mixins.moreboard.json"
+    "mixins.tagboard.json"
   ],
 
   "depends": {

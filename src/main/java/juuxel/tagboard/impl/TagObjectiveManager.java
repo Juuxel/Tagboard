@@ -1,4 +1,4 @@
-package juuxel.moreboard.impl;
+package juuxel.tagboard.impl;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;

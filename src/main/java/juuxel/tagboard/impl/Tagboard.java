@@ -1,6 +1,6 @@
-package juuxel.moreboard.impl;
+package juuxel.tagboard.impl;
 
-import juuxel.moreboard.api.MoreboardApi;
+import juuxel.tagboard.api.TagboardApi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resource.ResourceType;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public final class Moreboard implements ModInitializer {
+public final class Tagboard implements ModInitializer {
     private static final Map<Registry<?>, TagGroupEntry<?>> tagGroupRegistry = new HashMap<>();
 
     public static <T, G extends TagGroup<T>> void addTagsForRegistry(Registry<? extends T> registry, Supplier<G> groupSupplier) {
@@ -24,10 +24,10 @@ public final class Moreboard implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        MoreboardApi.addTagsForRegistry(Registry.BLOCK, () -> ServerTagManagerHolder.getTagManager().getBlocks());
-        MoreboardApi.addTagsForRegistry(Registry.ITEM, () -> ServerTagManagerHolder.getTagManager().getItems());
-        MoreboardApi.addTagsForRegistry(Registry.ENTITY_TYPE, () -> ServerTagManagerHolder.getTagManager().getEntityTypes());
-        MoreboardApi.addTagsForRegistry(Registry.FLUID, () -> ServerTagManagerHolder.getTagManager().getFluids());
+        TagboardApi.addTagsForRegistry(Registry.BLOCK, () -> ServerTagManagerHolder.getTagManager().getBlocks());
+        TagboardApi.addTagsForRegistry(Registry.ITEM, () -> ServerTagManagerHolder.getTagManager().getItems());
+        TagboardApi.addTagsForRegistry(Registry.ENTITY_TYPE, () -> ServerTagManagerHolder.getTagManager().getEntityTypes());
+        TagboardApi.addTagsForRegistry(Registry.FLUID, () -> ServerTagManagerHolder.getTagManager().getFluids());
 
         Util.visit(Registry.STAT_TYPE, (statType, id) -> {
             addStat(statType, tagGroupRegistry.get(statType.getRegistry()));
@@ -44,7 +44,7 @@ public final class Moreboard implements ModInitializer {
     }
 
     public static Identifier id(String path) {
-        return new Identifier("moreboard", path);
+        return new Identifier("tagboard", path);
     }
 
     private static final class TagGroupEntry<T> {

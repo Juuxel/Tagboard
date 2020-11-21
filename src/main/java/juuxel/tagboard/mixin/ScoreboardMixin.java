@@ -1,6 +1,6 @@
-package juuxel.moreboard.mixin;
+package juuxel.tagboard.mixin;
 
-import juuxel.moreboard.impl.TagObjectiveManager;
+import juuxel.tagboard.impl.TagObjectiveManager;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
