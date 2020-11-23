@@ -11,7 +11,7 @@ archivesBaseName = project.archives_base_name
 group = project.maven_group
 
 if ('true'.equalsIgnoreCase(System.getenv('CI')) && grgit != null) {
-    version = grgit.branch.current().name + "-" + grgit.head().abbreviatedId
+    version = project.mod_version + "-" + grgit.branch.current().name + "." + grgit.head().abbreviatedId
 } else {
     version = project.mod_version
 }
