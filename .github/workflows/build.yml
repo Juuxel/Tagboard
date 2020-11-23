@@ -39,5 +39,5 @@ jobs:
           arguments: publish
         env:
           CI: true
-          GITHUB_USER: ${{ secrets.USER }}
+          GITHUB_USER: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
