@@ -74,6 +74,8 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId = archivesBaseName.toString().toLowerCase(Locale.ROOT)
+
             // add all the jars that should be included when publishing to maven
             artifact(remapJar) {
                 builtBy remapJar
