@@ -28,14 +28,16 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-      - name: make gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build
-      - name: capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '11' }} # Only upload artifacts built from LTS java on one OS
-        uses: actions/upload-artifact@v2
+        uses: eskatos/gradle-command-action@v1.3.3
         with:
-          name: Artifacts
-          path: build/libs/
+          arguments: build
+      - name: publish package
+        if: ${{ runner.os == 'Linux' && matrix.java == '11' }} # Only upload artifacts built from LTS java on one OS
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          arguments: publish
+        env:
+          CI: true
+          GITHUB_USER: ${{ secrets.USER }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

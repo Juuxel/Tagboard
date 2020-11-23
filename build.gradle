@@ -1,14 +1,22 @@
 plugins {
     id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
+    id 'org.ajoberstar.grgit' version '4.1.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
+
+if ('true'.equalsIgnoreCase(System.getenv('CI')) && grgit != null) {
+    version = grgit.branch.current().name + "-" + grgit.head().abbreviatedId
+} else {
+    version = project.mod_version
+}
+
+version += "+" + project.minecraft_version
 
 dependencies {
     // To change the versions see the gradle.properties file
@@ -80,5 +88,13 @@ publishing {
     // To publish to maven local, no extra repositories are necessary. Just use the task `publishToMavenLocal`.
     repositories {
         // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Juuxel/Tagboard")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
+                username = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
