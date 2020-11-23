@@ -1,9 +1,7 @@
-# Fabric Example Mod
+<img src="icon.png" align="left" width="180px"/>
 
-## Setup
+# Tagboard
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+[![](https://img.shields.io/github/license/Juuxel/Tagboard.svg)](COPYING) [![](https://img.shields.io/github/release/Juuxel/Tagboard.svg)](https://github.com/Juuxel/Tagboard/releases) ![](http://cf.way2muchnoise.eu/versions/minecraft_tagboard_all.svg) [![](http://cf.way2muchnoise.eu/adorn.svg)](https://curseforge.com/minecraft/mc-mods/tagboard)
 
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+*Use tags with scoreboards!* • [Downloads](https://github.com/Juuxel/Tagboard/releases) • [CurseForge](https://curseforge.com/minecraft/mc-mods/tagboard)
