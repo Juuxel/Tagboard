@@ -55,8 +55,10 @@ java {
 }
 
 jar {
-    from("COPYING", "COPYING.LESSER") {
-        rename { "${it}_${project.archivesBaseName}" }
+    ["COPYING", "COPYING.LESSER"].each { file ->
+        from(file) {
+            rename { "${it}_${project.archivesBaseName}" }
+        }
     }
 }
 
