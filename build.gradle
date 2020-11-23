@@ -95,7 +95,7 @@ publishing {
             url = uri("https://maven.pkg.github.com/Juuxel/Tagboard")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
-                username = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
