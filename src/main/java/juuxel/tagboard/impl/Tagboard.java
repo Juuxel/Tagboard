@@ -37,7 +37,7 @@ public final class Tagboard implements ModInitializer {
             addStat(statType, tagGroupRegistry.get(statType.getRegistry()));
         });
 
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new CriterionRebuilder());
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(TagCriterionManager.INSTANCE);
     }
 
     @SuppressWarnings("unchecked")

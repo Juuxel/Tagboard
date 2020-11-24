@@ -1,9 +1,13 @@
 package juuxel.tagboard.impl;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
+import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatType;
@@ -12,6 +16,7 @@ import net.minecraft.tag.TagGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,12 +25,27 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class TagCriterionManager {
+public enum TagCriterionManager implements SimpleSynchronousResourceReloadListener {
+    INSTANCE;
+
+    private static final Identifier ID = Tagboard.id("tag_criterion_manager");
+    private static final Set<Identifier> DEPENDENCIES = ImmutableSet.of(ResourceReloadListenerKeys.TAGS);
+
     private static final Map<StatType<?>, StatTypeEntry<?>> statTypes = new HashMap<>();
 
     // StatType<T> -> Identifier in Registry<T> -> Set<ScoreboardCriterion>
     private static final Map<StatType<?>, SetMultimap<Identifier, ScoreboardCriterion>> criteriaByStat = new HashMap<>();
     static final Set<ScoreboardCriterion> criteria = new HashSet<>();
+
+    @Override
+    public Identifier getFabricId() {
+        return ID;
+    }
+
+    @Override
+    public Collection<Identifier> getFabricDependencies() {
+        return DEPENDENCIES;
+    }
 
     public static <T> Set<ScoreboardCriterion> getTagCriteria(Stat<T> stat) {
         if (!criteriaByStat.containsKey(stat.getType())) {
@@ -37,7 +57,8 @@ public final class TagCriterionManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static void rebuild() {
+    @Override
+    public void apply(ResourceManager manager) {
         criteria.clear();
         criteriaByStat.clear();
 
@@ -52,7 +73,7 @@ public final class TagCriterionManager {
                 Identifier tagId = tagEntry.getKey();
                 Tag<?> tag = tagEntry.getValue();
 
-                ScoreboardCriterion criterion = getCriterion(statId, tagId);
+                ScoreboardCriterion criterion = getCriterion(statId, tagId, SourcedCriterion.Source.TAG);
                 criteria.add(criterion);
 
                 for (Object value : tag.values()) {
@@ -65,14 +86,14 @@ public final class TagCriterionManager {
         }
     }
 
-    private static ScoreboardCriterion getCriterion(Identifier statId, Identifier tagId) {
-        return getCriterion(idToString(statId) + ":#" + idToString(tagId));
+    private static ScoreboardCriterion getCriterion(Identifier statId, Identifier tagId, SourcedCriterion.Source source) {
+        return getCriterion(idToString(statId) + ":#" + idToString(tagId), source);
     }
 
-    static ScoreboardCriterion getCriterion(String name) {
+    public static ScoreboardCriterion getCriterion(String name, SourcedCriterion.Source source) {
         return ScoreboardCriterion.OBJECTIVES.containsKey(name)
             ? ScoreboardCriterion.OBJECTIVES.get(name)
-            : new ScoreboardCriterion(name);
+            : new SourcedCriterion(name, source);
     }
 
     private static String idToString(Identifier id) {

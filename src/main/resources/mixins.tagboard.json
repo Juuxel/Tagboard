@@ -8,6 +8,7 @@
     "ScoreboardMixin"
   ],
   "client": [
+    "client.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

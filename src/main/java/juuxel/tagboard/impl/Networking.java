@@ -1,9 +1,6 @@
 package juuxel.tagboard.impl;
 
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -27,22 +24,5 @@ public final class Networking {
             buf.writeString(criterion.getName());
         }
         return ServerSidePacketRegistry.INSTANCE.toPacket(TAG_CRITERIA_S2C_PACKET, buf);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void initClient() {
-        ClientSidePacketRegistry.INSTANCE.register(TAG_CRITERIA_S2C_PACKET, (context, buf) -> {
-            int size = buf.readInt();
-            String[] names = new String[size];
-            for (int i = 0; i < size; i++) {
-                names[i] = buf.readString();
-            }
-
-            context.getTaskQueue().execute(() -> {
-                for (String name : names) {
-                    TagCriterionManager.getCriterion(name);
-                }
-            });
-        });
     }
 }
