@@ -25,6 +25,6 @@ final class CriterionRebuilder implements SimpleSynchronousResourceReloadListene
 
     @Override
     public void apply(ResourceManager manager) {
-        TagObjectiveManager.rebuild();
+        TagCriterionManager.rebuild();
     }
 }

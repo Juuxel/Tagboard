@@ -44,7 +44,7 @@ public final class Tagboard implements ModInitializer {
     private static <T> void addStat(StatType<?> statType, @Nullable TagGroupEntry<T> tagGroupEntry) {
         if (tagGroupEntry == null) return;
 
-        TagObjectiveManager.addStat((StatType<T>) statType, tagGroupEntry.registry, tagGroupEntry.groupSupplier);
+        TagCriterionManager.addStat((StatType<T>) statType, tagGroupEntry.registry, tagGroupEntry.groupSupplier);
     }
 
     public static Identifier id(String path) {

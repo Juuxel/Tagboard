@@ -1,6 +1,6 @@
 package juuxel.tagboard.mixin;
 
-import juuxel.tagboard.impl.TagObjectiveManager;
+import juuxel.tagboard.impl.TagCriterionManager;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
@@ -21,7 +21,7 @@ abstract class ScoreboardMixin {
     @Inject(method = "forEachScore", at = @At("RETURN"))
     private void onForEachScore(ScoreboardCriterion criterion, String player, Consumer<ScoreboardPlayerScore> action, CallbackInfo info) {
         if (criterion instanceof Stat<?>) {
-            for (ScoreboardCriterion tagCriterion : TagObjectiveManager.getTagCriteria((Stat<?>) criterion)) {
+            for (ScoreboardCriterion tagCriterion : TagCriterionManager.getTagCriteria((Stat<?>) criterion)) {
                 forEachScore(tagCriterion, player, action);
             }
         }

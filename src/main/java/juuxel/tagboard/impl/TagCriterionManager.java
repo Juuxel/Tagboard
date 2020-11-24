@@ -14,29 +14,32 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class TagObjectiveManager {
+public final class TagCriterionManager {
     private static final Map<StatType<?>, StatTypeEntry<?>> statTypes = new HashMap<>();
 
     // StatType<T> -> Identifier in Registry<T> -> Set<ScoreboardCriterion>
-    private static final Map<StatType<?>, SetMultimap<Identifier, ScoreboardCriterion>> criteria = new HashMap<>();
+    private static final Map<StatType<?>, SetMultimap<Identifier, ScoreboardCriterion>> criteriaByStat = new HashMap<>();
+    static final Set<ScoreboardCriterion> criteria = new HashSet<>();
 
     public static <T> Set<ScoreboardCriterion> getTagCriteria(Stat<T> stat) {
-        if (!criteria.containsKey(stat.getType())) {
+        if (!criteriaByStat.containsKey(stat.getType())) {
             return Collections.emptySet();
         }
 
         Identifier valueId = stat.getType().getRegistry().getId(stat.getValue());
-        return criteria.get(stat.getType()).get(valueId);
+        return criteriaByStat.get(stat.getType()).get(valueId);
     }
 
     @SuppressWarnings("unchecked")
     public static void rebuild() {
         criteria.clear();
+        criteriaByStat.clear();
 
         for (StatType<?> statType : Registry.STAT_TYPE) {
             StatTypeEntry<?> entry = statTypes.get(statType);
@@ -50,6 +53,7 @@ public final class TagObjectiveManager {
                 Tag<?> tag = tagEntry.getValue();
 
                 ScoreboardCriterion criterion = getCriterion(statId, tagId);
+                criteria.add(criterion);
 
                 for (Object value : tag.values()) {
                     Identifier id = ((Function<Object, Identifier>) entry.idGetter).apply(value);
@@ -57,13 +61,15 @@ public final class TagObjectiveManager {
                 }
             }
 
-            criteria.put(statType, ImmutableSetMultimap.copyOf(criterionMap));
+            criteriaByStat.put(statType, ImmutableSetMultimap.copyOf(criterionMap));
         }
     }
 
     private static ScoreboardCriterion getCriterion(Identifier statId, Identifier tagId) {
-        String name = idToString(statId) + ":#" + idToString(tagId);
+        return getCriterion(idToString(statId) + ":#" + idToString(tagId));
+    }
 
+    static ScoreboardCriterion getCriterion(String name) {
         return ScoreboardCriterion.OBJECTIVES.containsKey(name)
             ? ScoreboardCriterion.OBJECTIVES.get(name)
             : new ScoreboardCriterion(name);
@@ -74,7 +80,7 @@ public final class TagObjectiveManager {
     }
 
     public static <T> void addStat(StatType<T> statType, Registry<T> registry, Supplier<TagGroup<T>> groupSupplier) {
-        TagObjectiveManager.statTypes.put(statType, new StatTypeEntry<>(registry::getId, groupSupplier));
+        TagCriterionManager.statTypes.put(statType, new StatTypeEntry<>(registry::getId, groupSupplier));
     }
 
     private static final class StatTypeEntry<T> {

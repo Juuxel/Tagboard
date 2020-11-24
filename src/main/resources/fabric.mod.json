@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "juuxel.tagboard.impl.Tagboard"
+    ],
+    "client": [
+      "juuxel.tagboard.impl.client.TagboardClient"
     ]
   },
   "mixins": [
